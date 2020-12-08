@@ -1,0 +1,25 @@
+{
+    "name": "ra-data-geoserver",
+    "version": "0.0.1",
+    "description": "Simple REST data provider for react-admin",
+    "main": "src/index.js",
+    "module": "src/index.js",
+    "sideEffects": false,
+    "files": [
+        "*.md",
+        "lib",
+        "esm",
+        "src"
+    ],
+    "authors": [
+        "Sergio Edo"
+    ],
+    "repository": "sergioedo/ra-data-geoserver",
+    "homepage": "https://github.com/sergioedo/ra-data-geoserver#readme",
+    "bugs": "https://github.com/sergioedo/ra-data-geoserver/issues",
+    "license": "MIT",
+    "dependencies": {
+        "query-string": "5.1.1",
+        "react-admin": "3.10.3"
+    }
+}

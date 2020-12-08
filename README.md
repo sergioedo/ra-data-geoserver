@@ -1,2 +1,2 @@
 # ra-data-geoserver
-react-admin data provider for GeoServer
+react-admin data provider for GeoServer (WFS features)
