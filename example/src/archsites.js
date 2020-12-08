@@ -5,8 +5,8 @@ export const ArchSiteList = props => (
     <List {...props}>
         <Datagrid rowClick="edit">
             <TextField source="id" label={'ID'} />
-            <TextField source="str1" label={'Name'} />
-            <NumberField source="cat" label={'Category'} />
+            <TextField source="properties.str1" label={'Name'} />
+            <NumberField source="properties.cat" label={'Category'} />
         </Datagrid>
     </List>
 );
@@ -15,8 +15,8 @@ export const ArchSiteEdit = props => (
     <Edit {...props}>
         <SimpleForm>
             {/* <TextInput source="id" label={'ID'} /> */}
-            <TextInput source="str1" label={'Name'} />
-            <NumberInput source="cat" label={'Category'} />
+            <TextInput source="properties.str1" label={'Name'} />
+            <NumberInput source="properties.cat" label={'Category'} />
         </SimpleForm>
     </Edit>
 );

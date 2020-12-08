@@ -5,13 +5,14 @@ import { ArchSiteList, ArchSiteEdit } from './archsites'
 import RoomIcon from '@material-ui/icons/Room';
 
 const baseURL = 'http://localhost:8080/geoserver';
+const geoServerWorkspace = 'sf';
 const extraParams = {
-  // cql_filter: 'cat<=15',
+  cql_filter: 'cat<=15',
 }
-const dataProvider = geoServerProvider(baseURL, extraParams);
+const dataProvider = geoServerProvider(baseURL, geoServerWorkspace, extraParams);
 const App = () => (
   <Admin title="GeoServer Admin" dataProvider={dataProvider}>
-    <Resource name="sf:archsites" icon={RoomIcon} options={{ label: 'Archeological Sites' }} list={ArchSiteList} edit={ArchSiteEdit} />
+    <Resource name="archsites" icon={RoomIcon} options={{ label: 'Archeological Sites' }} list={ArchSiteList} edit={ArchSiteEdit} />
   </Admin>
 );
 

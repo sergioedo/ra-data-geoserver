@@ -3,12 +3,32 @@ import { stringify } from 'query-string';
 
 const httpClient = fetchUtils.fetchJson;
 
-export default function (geoserverBaseURL, extraQueryParams) {
+/**
+ * 
+ * @param {string} geoserverBaseURL GeoServer Base URL 
+ * @param {string} geoserverWorkspace GeoServer Workspace, to avoid prefix all layer names (resources)
+ * @param {object} extraQueryParams Object with extra query parameters (filters)
+ * @param {boolean} flattenProperties Transform GeoJSON to plain JSON object
+ */
+export default function (geoserverBaseURL, geoserverWorkspace, extraQueryParams, flattenProperties) {
 
     const featureToData = (feature) => {
-        return {
-            id: feature.id,
-            ...(feature.properties)
+        if (flattenProperties) {
+            return {
+                id: feature.id,
+                ...(feature.properties)
+                //TODO: geometry, as lat-lon fields
+            }
+        } else {
+            return feature
+        }
+    }
+
+    const getTypeName = (resource) => {
+        if (geoserverWorkspace && geoserverWorkspace !== '') {
+            return `${geoserverWorkspace}:${resource}`;
+        } else {
+            return resource;
         }
     }
 
@@ -22,7 +42,7 @@ export default function (geoserverBaseURL, extraQueryParams) {
             //TODO: cql_filter: JSON.stringify(params.filter)
         };
         const sortBy = (field !== 'id') ? `${field}+${order === 'ASC' ? 'A' : 'D'}` : '' //Disable sort by id, not supported by GeoServer, only properties
-        const url = `${geoserverBaseURL}/wfs?request=getFeature&typeName=${resource}&outputFormat=json&${stringify(query)}&sortBy=${sortBy}`;
+        const url = `${geoserverBaseURL}/wfs?request=getFeature&typeName=${getTypeName(resource)}&outputFormat=json&${stringify(query)}&sortBy=${sortBy}`;
 
         return httpClient(url).then(({ json }) => ({
             data: json.features.map(f => featureToData(f)),
@@ -34,7 +54,7 @@ export default function (geoserverBaseURL, extraQueryParams) {
         const query = {
             featureID: params.id
         }
-        const url = `${geoserverBaseURL}/wfs?request=getFeature&typeName=${resource}&outputFormat=json&${stringify(query)}`;
+        const url = `${geoserverBaseURL}/wfs?request=getFeature&typeName=${getTypeName(resource)}&outputFormat=json&${stringify(query)}`;
 
         return httpClient(url).then(({ json }) => ({
             data: featureToData(json.features[0])
