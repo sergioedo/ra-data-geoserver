@@ -16,8 +16,10 @@ export default function (geoserverBaseURL, geoserverWorkspace, extraQueryParams,
         if (flattenProperties) {
             return {
                 id: feature.id,
-                ...(feature.properties)
-                //TODO: geometry, as lat-lon fields
+                ...(feature.properties),
+                //TODO: geometry, as lat-lon fields (centroid on lines, polygons...)
+                // lon: feature.geometry.coordinates[0],
+                // lat: feature.geometry.coordinates[1]
             }
         } else {
             return feature
@@ -42,7 +44,7 @@ export default function (geoserverBaseURL, geoserverWorkspace, extraQueryParams,
             //TODO: cql_filter: JSON.stringify(params.filter)
         };
         const sortBy = (field !== 'id') ? `${field}+${order === 'ASC' ? 'A' : 'D'}` : '' //Disable sort by id, not supported by GeoServer, only properties
-        const url = `${geoserverBaseURL}/wfs?request=getFeature&typeName=${getTypeName(resource)}&outputFormat=json&${stringify(query)}&sortBy=${sortBy}`;
+        const url = `${geoserverBaseURL}/wfs?request=getFeature&typeName=${getTypeName(resource)}&outputFormat=json&${stringify(query)}&sortBy=${sortBy}&srsName=EPSG:4326`;
 
         return httpClient(url).then(({ json }) => ({
             data: json.features.map(f => featureToData(f)),
@@ -54,7 +56,7 @@ export default function (geoserverBaseURL, geoserverWorkspace, extraQueryParams,
         const query = {
             featureID: params.id
         }
-        const url = `${geoserverBaseURL}/wfs?request=getFeature&typeName=${getTypeName(resource)}&outputFormat=json&${stringify(query)}`;
+        const url = `${geoserverBaseURL}/wfs?request=getFeature&typeName=${getTypeName(resource)}&outputFormat=json&${stringify(query)}&srsName=EPSG:4326`;
 
         return httpClient(url).then(({ json }) => ({
             data: featureToData(json.features[0])
