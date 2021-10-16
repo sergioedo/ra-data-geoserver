@@ -1,22 +1,26 @@
-import { fetchUtils } from 'react-admin';
-import { stringify } from 'query-string';
+import { fetchUtils } from "react-admin"
+import { stringify } from "query-string"
 
-const httpClient = fetchUtils.fetchJson;
+const httpClient = fetchUtils.fetchJson
 
 /**
- * 
- * @param {string} geoserverBaseURL GeoServer Base URL 
+ *
+ * @param {string} geoserverBaseURL GeoServer Base URL
  * @param {string} geoserverWorkspace GeoServer Workspace, to avoid prefix all layer names (resources)
  * @param {object} extraQueryParams Object with extra query parameters (filters)
  * @param {boolean} flattenProperties Transform GeoJSON to plain JSON object
  */
-export default function (geoserverBaseURL, geoserverWorkspace, extraQueryParams, flattenProperties) {
-
+export default function (
+    geoserverBaseURL,
+    geoserverWorkspace,
+    extraQueryParams,
+    flattenProperties
+) {
     const featureToData = (feature) => {
         if (flattenProperties) {
             return {
                 id: feature.id,
-                ...(feature.properties),
+                ...feature.properties,
                 //TODO: geometry, as lat-lon fields (centroid on lines, polygons...)
                 // lon: feature.geometry.coordinates[0],
                 // lat: feature.geometry.coordinates[1]
@@ -27,55 +31,62 @@ export default function (geoserverBaseURL, geoserverWorkspace, extraQueryParams,
     }
 
     const getTypeName = (resource) => {
-        if (geoserverWorkspace && geoserverWorkspace !== '') {
-            return `${geoserverWorkspace}:${resource}`;
+        if (geoserverWorkspace && geoserverWorkspace !== "") {
+            return `${geoserverWorkspace}:${resource}`
         } else {
-            return resource;
+            return resource
         }
     }
 
     const getList = (resource, params) => {
-        const { page, perPage } = params.pagination;
-        const { field, order } = params.sort;
+        const { page, perPage } = params.pagination
+        const { field, order } = params.sort
         const query = {
             ...extraQueryParams,
             startIndex: (page - 1) * perPage,
             count: perPage,
             //TODO: cql_filter: JSON.stringify(params.filter)
-        };
-        const sortBy = (field !== 'id') ? `${field}+${order === 'ASC' ? 'A' : 'D'}` : '' //Disable sort by id, not supported by GeoServer, only properties
-        const url = `${geoserverBaseURL}/wfs?request=getFeature&typeName=${getTypeName(resource)}&outputFormat=json&${stringify(query)}&sortBy=${sortBy}&srsName=EPSG:4326`;
+        }
+        const sortBy =
+            field !== "id" ? `${field}+${order === "ASC" ? "A" : "D"}` : "" //Disable sort by id, not supported by GeoServer, only properties
+        const url = `${geoserverBaseURL}/wfs?request=getFeature&typeName=${getTypeName(
+            resource
+        )}&outputFormat=json&${stringify(
+            query
+        )}&sortBy=${sortBy}&srsName=EPSG:4326`
 
         return httpClient(url).then(({ json }) => ({
-            data: json.features.map(f => featureToData(f)),
-            total: json.totalFeatures
-        }));
+            data: json.features.map((f) => featureToData(f)),
+            total: json.totalFeatures,
+        }))
     }
 
     const getOne = (resource, params) => {
         const query = {
-            featureID: params.id
+            featureID: params.id,
         }
-        const url = `${geoserverBaseURL}/wfs?request=getFeature&typeName=${getTypeName(resource)}&outputFormat=json&${stringify(query)}&srsName=EPSG:4326`;
+        const url = `${geoserverBaseURL}/wfs?request=getFeature&typeName=${getTypeName(
+            resource
+        )}&outputFormat=json&${stringify(query)}&srsName=EPSG:4326`
 
         return httpClient(url).then(({ json }) => ({
-            data: featureToData(json.features[0])
-        }));
+            data: featureToData(json.features[0]),
+        }))
     }
 
     // TODO: pending implementation
     const getMany = (resource, params) => {
         const query = {
             filter: JSON.stringify({ id: params.ids }),
-        };
-        const url = `${apiUrl}/${resource}?${stringify(query)}`;
-        return httpClient(url).then(({ json }) => ({ data: json }));
+        }
+        const url = `${apiUrl}/${resource}?${stringify(query)}`
+        return httpClient(url).then(({ json }) => ({ data: json }))
     }
 
     // TODO: pending implementation
     const getManyReference = (resource, params) => {
-        const { page, perPage } = params.pagination;
-        const { field, order } = params.sort;
+        const { page, perPage } = params.pagination
+        const { field, order } = params.sort
         const query = {
             sort: JSON.stringify([field, order]),
             range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
@@ -83,19 +94,19 @@ export default function (geoserverBaseURL, geoserverWorkspace, extraQueryParams,
                 ...params.filter,
                 [params.target]: params.id,
             }),
-        };
-        const url = `${apiUrl}/${resource}?${stringify(query)}`;
+        }
+        const url = `${apiUrl}/${resource}?${stringify(query)}`
 
         return httpClient(url).then(({ headers, json }) => ({
             data: json,
-            total: parseInt(headers.get('content-range').split('/').pop(), 10),
-        }));
+            total: parseInt(headers.get("content-range").split("/").pop(), 10),
+        }))
     }
 
     // TODO: pending implementation
     const update = (resource, params) =>
         httpClient(`${apiUrl}/${resource}/${params.id}`, {
-            method: 'PUT',
+            method: "PUT",
             body: JSON.stringify(params.data),
         }).then(({ json }) => ({ data: json }))
 
@@ -103,17 +114,17 @@ export default function (geoserverBaseURL, geoserverWorkspace, extraQueryParams,
     const updateMany = (resource, params) => {
         const query = {
             filter: JSON.stringify({ id: params.ids }),
-        };
+        }
         return httpClient(`${apiUrl}/${resource}?${stringify(query)}`, {
-            method: 'PUT',
+            method: "PUT",
             body: JSON.stringify(params.data),
-        }).then(({ json }) => ({ data: json }));
+        }).then(({ json }) => ({ data: json }))
     }
 
     // TODO: pending implementation
     const create = (resource, params) =>
         httpClient(`${apiUrl}/${resource}`, {
-            method: 'POST',
+            method: "POST",
             body: JSON.stringify(params.data),
         }).then(({ json }) => ({
             data: { ...params.data, id: json.id },
@@ -122,20 +133,19 @@ export default function (geoserverBaseURL, geoserverWorkspace, extraQueryParams,
     // TODO: pending implementation
     const del = (resource, params) =>
         httpClient(`${apiUrl}/${resource}/${params.id}`, {
-            method: 'DELETE',
+            method: "DELETE",
         }).then(({ json }) => ({ data: json }))
 
     // TODO: pending implementation
     const deleteMany = (resource, params) => {
         const query = {
             filter: JSON.stringify({ id: params.ids }),
-        };
+        }
         return httpClient(`${apiUrl}/${resource}?${stringify(query)}`, {
-            method: 'DELETE',
+            method: "DELETE",
             body: JSON.stringify(params.data),
-        }).then(({ json }) => ({ data: json }));
+        }).then(({ json }) => ({ data: json }))
     }
-
 
     return {
         getList,
@@ -146,6 +156,6 @@ export default function (geoserverBaseURL, geoserverWorkspace, extraQueryParams,
         updateMany,
         create,
         delete: del,
-        deleteMany
+        deleteMany,
     }
-};
+}

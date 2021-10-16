@@ -1,6 +1,7 @@
 This is a sample react-admin app using GeoServer data provider.
 
 # Run
+
 To run it locally, you need a GeoServer backend. You can launch it with docker:
 
 ```

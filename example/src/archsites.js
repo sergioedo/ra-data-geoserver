@@ -1,33 +1,41 @@
-import * as React from "react";
+import * as React from "react"
 import {
-    List, Edit, Show, Datagrid, SimpleForm,
-    TextField, NumberField, TextInput, NumberInput,
-    SimpleShowLayout, useShowController
-} from 'react-admin';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+    List,
+    Edit,
+    Show,
+    Datagrid,
+    SimpleForm,
+    TextField,
+    NumberField,
+    TextInput,
+    NumberInput,
+    SimpleShowLayout,
+    useShowController,
+} from "react-admin"
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 
-export const ArchSiteList = props => (
+export const ArchSiteList = (props) => (
     <List {...props}>
         <Datagrid rowClick="show">
-            <TextField source="id" label={'ID'} />
-            <TextField source="properties.str1" label={'Name'} />
-            <NumberField source="properties.cat" label={'Category'} />
+            <TextField source="id" label={"ID"} />
+            <TextField source="properties.str1" label={"Name"} />
+            <NumberField source="properties.cat" label={"Category"} />
         </Datagrid>
     </List>
-);
+)
 
-export const ArchSiteEdit = props => (
+export const ArchSiteEdit = (props) => (
     <Edit {...props}>
         <SimpleForm>
             {/* <TextInput source="id" label={'ID'} /> */}
-            <TextInput source="properties.str1" label={'Name'} />
-            <NumberInput source="properties.cat" label={'Category'} />
+            <TextInput source="properties.str1" label={"Name"} />
+            <NumberInput source="properties.cat" label={"Category"} />
         </SimpleForm>
     </Edit>
-);
+)
 
-export const ArchSiteShow = props => {
-    console.log(props);
+export const ArchSiteShow = (props) => {
+    console.log(props)
     const {
         // basePath, // deduced from the location, useful for action buttons
         // defaultTitle, // the translated title based on the resource, e.g. 'Post #123'
@@ -36,35 +44,44 @@ export const ArchSiteShow = props => {
         record, // record fetched via dataProvider.getOne() based on the id from the location
         // resource, // the resource name, deduced from the location. e.g. 'posts'
         // version, // integer used by the refresh feature
-    } = useShowController(props);
-    console.log(record);
-    const lat = record && record.geometry.coordinates[1];
-    const lon = record && record.geometry.coordinates[0];
+    } = useShowController(props)
+    console.log(record)
+    const lat = record && record.geometry.coordinates[1]
+    const lon = record && record.geometry.coordinates[0]
     return (
         <Show {...props}>
             <SimpleShowLayout>
                 {/* <TextField source="id" /> */}
-                <NumberField source="properties.str1" label={'Name'} />
-                <NumberField source="properties.cat" label={'Category'} />
-                <TextField source="geometry.type" label={'Geometry'} />
-                <TextField source="geometry.coordinates[1]" label={'Latitude'} />
-                <TextField source="geometry.coordinates[0]" label={'Longitude'} />
-                {
-                    record && (
-                        <MapContainer style={{ height: '350px' }} center={[lat, lon]} zoom={12} scrollWheelZoom={true}>
-                            <TileLayer
-                                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-                            <Marker position={[lat, lon]}>
-                                <Popup>
-                                    A pretty CSS3 popup. <br /> Easily customizable.
-                                </Popup>
-                            </Marker>
-                        </MapContainer>
-                    )
-                }
+                <NumberField source="properties.str1" label={"Name"} />
+                <NumberField source="properties.cat" label={"Category"} />
+                <TextField source="geometry.type" label={"Geometry"} />
+                <TextField
+                    source="geometry.coordinates[1]"
+                    label={"Latitude"}
+                />
+                <TextField
+                    source="geometry.coordinates[0]"
+                    label={"Longitude"}
+                />
+                {record && (
+                    <MapContainer
+                        style={{ height: "350px" }}
+                        center={[lat, lon]}
+                        zoom={12}
+                        scrollWheelZoom={true}
+                    >
+                        <TileLayer
+                            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        <Marker position={[lat, lon]}>
+                            <Popup>
+                                A pretty CSS3 popup. <br /> Easily customizable.
+                            </Popup>
+                        </Marker>
+                    </MapContainer>
+                )}
             </SimpleShowLayout>
         </Show>
-    );
-} 
+    )
+}
