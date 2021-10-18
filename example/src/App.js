@@ -4,12 +4,16 @@ import geoServerProvider from "ra-data-geoserver"
 import { ArchSiteList, ArchSiteEdit, ArchSiteShow } from "./archsites"
 import RoomIcon from "@material-ui/icons/Room"
 
-const baseURL = "http://localhost:8080/geoserver"
-const geoServerWorkspace = "sf"
-const extraParams = {
-    cql_filter: "cat<=15",
-}
-const dataProvider = geoServerProvider(baseURL, geoServerWorkspace, extraParams)
+const dataProvider = geoServerProvider({
+    geoserverBaseURL: "http://localhost:3000/geoserver",
+    geoserverWorkspace: "sf",
+    extraQueryParams: {
+        cql_filter: "cat<=15",
+    },
+    // flattenProperties: false,
+    geoserverUser: process.env.REACT_APP_GEOSERVER_USER,
+    geoserverPassword: process.env.REACT_APP_GEOSERVER_PASSWORD,
+})
 const App = () => (
     <Admin title="GeoServer Admin" dataProvider={dataProvider}>
         <Resource

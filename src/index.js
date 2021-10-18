@@ -1,7 +1,33 @@
 import { fetchUtils } from "react-admin"
 import { stringify } from "query-string"
 
-const httpClient = fetchUtils.fetchJson
+const buildHTTPHeaders = (options = {}) => {
+    if (!options.headers) {
+        options.headers = new Headers({ Accept: "application/json" })
+    }
+    // GeoServer Security
+    if (options.geoserverUser) {
+        const credentials = `${options.geoserverUser}:${options.geoserverPassword}`
+        const encodedCredentials = btoa(
+            unescape(encodeURIComponent(credentials))
+        )
+        options.headers.set("Authorization", `Basic ${encodedCredentials}`)
+    }
+    return options
+}
+
+const httpClient = (url, options = {}) => {
+    return fetchUtils.fetchJson(url, buildHTTPHeaders(options))
+}
+
+const httpClientWFST = (url, options = {}) => {
+    if (!options.headers) {
+        options.headers = new Headers({ Accept: "application/json" })
+    }
+    // Force content type to XML
+    options.headers.set("Content-Type", "text/xml")
+    return fetchUtils.fetchJson(url, buildHTTPHeaders(options))
+}
 
 /**
  *
@@ -10,12 +36,14 @@ const httpClient = fetchUtils.fetchJson
  * @param {object} extraQueryParams Object with extra query parameters (filters)
  * @param {boolean} flattenProperties Transform GeoJSON to plain JSON object
  */
-export default function (
+export default function ({
     geoserverBaseURL,
     geoserverWorkspace,
     extraQueryParams,
-    flattenProperties
-) {
+    flattenProperties,
+    geoserverUser,
+    geoserverPassword,
+}) {
     const featureToData = (feature) => {
         if (flattenProperties) {
             return {
@@ -103,13 +131,46 @@ export default function (
         }))
     }
 
-    // TODO: pending implementation
-    const update = (resource, params) =>
-        httpClient(`${apiUrl}/${resource}/${params.id}`, {
-            method: "PUT",
-            body: JSON.stringify(params.data),
-        }).then(({ json }) => ({ data: json }))
+    const featureToWFSTransaction = (resource, id, data) => {
+        console.log({ resource, id, data })
+        const wfsProperties = Object.keys(data.properties).map((property) => {
+            const propertyValue = data.properties[property]
+            return `
+            <wfs:Property>
+            <wfs:Name>${property}</wfs:Name>
+            <wfs:Value>${propertyValue}</wfs:Value>
+            </wfs:Property>
+            `
+        })
+        const xmlWFST = `
+        <wfs:Transaction service="WFS" version="1.0.0"
+            xmlns:ogc="http://www.opengis.net/ogc"
+            xmlns:wfs="http://www.opengis.net/wfs">
+            <wfs:Update typeName="${geoserverWorkspace}:${resource}">
+            ${wfsProperties.join("")}
+            <ogc:Filter>
+                <ogc:FeatureId fid="${id}"/>
+            </ogc:Filter>
+            </wfs:Update>
+        </wfs:Transaction>`
+        return xmlWFST
+    }
 
+    const update = (resource, params) => {
+        const query = {
+            featureID: params.id,
+        }
+        const url = `${geoserverBaseURL}/wfs`
+        console.log({ resource, params })
+        return httpClientWFST(url, {
+            method: "POST",
+            body: featureToWFSTransaction(resource, params.id, params.data),
+            geoserverUser,
+            geoserverPassword,
+        }).then(({ xmlText }) => {
+            return { data: params.data }
+        })
+    }
     // TODO: pending implementation
     const updateMany = (resource, params) => {
         const query = {
