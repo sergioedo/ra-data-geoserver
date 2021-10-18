@@ -131,8 +131,7 @@ export default function ({
         }))
     }
 
-    const featureToWFSTransaction = (resource, id, data) => {
-        console.log({ resource, id, data })
+    const featureToWFSTUpdate = ({ resource, id, data }) => {
         const wfsProperties = Object.keys(data.properties).map((property) => {
             const propertyValue = data.properties[property]
             return `
@@ -157,14 +156,14 @@ export default function ({
     }
 
     const update = (resource, params) => {
-        const query = {
-            featureID: params.id,
-        }
         const url = `${geoserverBaseURL}/wfs`
-        console.log({ resource, params })
         return httpClientWFST(url, {
             method: "POST",
-            body: featureToWFSTransaction(resource, params.id, params.data),
+            body: featureToWFSTUpdate({
+                resource,
+                id: params.id,
+                data: params.data,
+            }),
             geoserverUser,
             geoserverPassword,
         }).then(({ xmlText }) => {
@@ -191,11 +190,31 @@ export default function ({
             data: { ...params.data, id: json.id },
         }))
 
-    // TODO: pending implementation
-    const del = (resource, params) =>
-        httpClient(`${apiUrl}/${resource}/${params.id}`, {
-            method: "DELETE",
-        }).then(({ json }) => ({ data: json }))
+    const featureToWFSTDelete = ({ resource, id }) => {
+        const xmlWFST = `
+            <wfs:Transaction service="WFS" version="1.0.0"
+                xmlns:ogc="http://www.opengis.net/ogc"
+                xmlns:wfs="http://www.opengis.net/wfs">
+                <wfs:Delete typeName="${geoserverWorkspace}:${resource}">
+                    <ogc:Filter>
+                        <ogc:FeatureId fid="${id}"/>
+                    </ogc:Filter>
+                </wfs:Delete>
+            </wfs:Transaction>`
+        return xmlWFST
+    }
+
+    const del = (resource, params) => {
+        const url = `${geoserverBaseURL}/wfs`
+        return httpClientWFST(url, {
+            method: "POST",
+            body: featureToWFSTDelete({ resource, id: params.id }),
+            geoserverUser,
+            geoserverPassword,
+        }).then(({ xmlText }) => {
+            return { data: params.previousData }
+        })
+    }
 
     // TODO: pending implementation
     const deleteMany = (resource, params) => {
