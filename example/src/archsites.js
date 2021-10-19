@@ -30,6 +30,8 @@ export const ArchSiteEdit = (props) => (
             {/* <TextInput source="id" label={'ID'} /> */}
             <TextInput source="properties.str1" label={"Name"} />
             <NumberInput source="properties.cat" label={"Category"} />
+            <TextInput source="geometry.coordinates[1]" label={"Latitude"} />
+            <TextInput source="geometry.coordinates[0]" label={"Longitude"} />
         </SimpleForm>
     </Edit>
 )
@@ -55,13 +57,21 @@ export const ArchSiteShow = (props) => {
                 <NumberField source="properties.str1" label={"Name"} />
                 <NumberField source="properties.cat" label={"Category"} />
                 <TextField source="geometry.type" label={"Geometry"} />
-                <TextField
+                <NumberField
                     source="geometry.coordinates[1]"
                     label={"Latitude"}
+                    options={{
+                        style: "decimal",
+                        maximumFractionDigits: 6,
+                    }}
                 />
-                <TextField
+                <NumberField
                     source="geometry.coordinates[0]"
                     label={"Longitude"}
+                    options={{
+                        style: "decimal",
+                        maximumFractionDigits: 6,
+                    }}
                 />
                 {record && (
                     <MapContainer

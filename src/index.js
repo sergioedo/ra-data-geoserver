@@ -141,12 +141,29 @@ export default function ({
             </wfs:Property>
             `
         })
+        const geometryFieldName = "the_geom" //TODO: get geometry field name from schema
+        const latitude = data.geometry.coordinates[1]
+        const longitude = data.geometry.coordinates[0]
+        const wfsPointGeometry = `
+            <wfs:Property>
+                <wfs:Name>${geometryFieldName}</wfs:Name>
+                <wfs:Value>
+                    <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+                        <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">
+                            ${longitude},${latitude}
+                        </gml:coordinates>
+                    </gml:Point>
+                </wfs:Value>
+            </wfs:Property>
+        `
         const xmlWFST = `
         <wfs:Transaction service="WFS" version="1.0.0"
+            xmlns:gml="http://www.opengis.net/gml"
             xmlns:ogc="http://www.opengis.net/ogc"
             xmlns:wfs="http://www.opengis.net/wfs">
             <wfs:Update typeName="${geoserverWorkspace}:${resource}">
             ${wfsProperties.join("")}
+            ${wfsPointGeometry}
             <ogc:Filter>
                 <ogc:FeatureId fid="${id}"/>
             </ogc:Filter>
