@@ -1,6 +1,7 @@
 import * as React from "react"
 import {
     List,
+    Create,
     Edit,
     Show,
     Datagrid,
@@ -22,6 +23,26 @@ export const PoiList = (props) => (
             <TextField source="properties.MAINPAGE" label={"Main Page"} />
         </Datagrid>
     </List>
+)
+
+export const PoiCreate = (props) => (
+    <Create {...props}>
+        <SimpleForm>
+            <TextInput source="properties.NAME" label={"Name"} />
+            <TextInput source="properties.THUMBNAIL" label={"Thumbnail"} />
+            <TextInput source="properties.MAINPAGE" label={"Main Page"} />
+            <TextInput
+                source="geometry.coordinates[1]"
+                label={"Latitude"}
+                defaultValue={"41.390205"}
+            />
+            <TextInput
+                source="geometry.coordinates[0]"
+                label={"Longitude"}
+                defaultValue={"2.154007"}
+            />
+        </SimpleForm>
+    </Create>
 )
 
 export const PoiEdit = (props) => (

@@ -198,14 +198,58 @@ export default function ({
         }).then(({ json }) => ({ data: json }))
     }
 
-    // TODO: pending implementation
-    const create = (resource, params) =>
-        httpClient(`${apiUrl}/${resource}`, {
+    const featureToWFSTInsert = ({ resource, data }) => {
+        const wfsProperties = Object.keys(data.properties).map((property) => {
+            const propertyValue = data.properties[property]
+            return `<${geoserverWorkspace}:${property}>${propertyValue}</${geoserverWorkspace}:${property}>`
+        })
+        const geometryFieldName = "the_geom" //TODO: get geometry field name from schema
+        const latitude = data.geometry.coordinates[1]
+        const longitude = data.geometry.coordinates[0]
+        const wfsPointGeometry = `
+            <feature:${geometryFieldName}>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">
+                        ${longitude},${latitude}
+                    </gml:coordinates>
+                </gml:Point>
+            </feature:${geometryFieldName}>
+        `
+        const xmlWFST = `
+        <wfs:Transaction service="WFS" version="1.0.0"
+            xmlns:gml="http://www.opengis.net/gml"
+            xmlns:ogc="http://www.opengis.net/ogc"
+            xmlns:wfs="http://www.opengis.net/wfs"
+            xmlns:${geoserverWorkspace}="${geoserverWorkspace}">
+            <wfs:Insert>
+                <${geoserverWorkspace}:${resource} xmlns:feature="http://www.openplans.org/${resource}">
+                ${wfsProperties.join("")}
+                ${wfsPointGeometry}            
+                </${geoserverWorkspace}:${resource}>
+            </wfs:Insert>
+        </wfs:Transaction>`
+        return xmlWFST
+    }
+
+    const create = (resource, params) => {
+        const url = `${geoserverBaseURL}/wfs`
+        return httpClientWFST(url, {
             method: "POST",
-            body: JSON.stringify(params.data),
-        }).then(({ json }) => ({
-            data: { ...params.data, id: json.id },
-        }))
+            body: featureToWFSTInsert({
+                resource,
+                data: params.data,
+            }),
+            geoserverUser,
+            geoserverPassword,
+        }).then((data) => {
+            const xmlParser = new DOMParser()
+            const xmlDoc = xmlParser.parseFromString(data.body, "text/xml")
+            const id = xmlDoc
+                .getElementsByTagName("ogc:FeatureId")[0]
+                .getAttribute("fid")
+            return { data: { ...params.data, id } }
+        })
+    }
 
     const featureToWFSTDelete = ({ resource, id }) => {
         const xmlWFST = `
