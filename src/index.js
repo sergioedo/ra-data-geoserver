@@ -76,7 +76,11 @@ export default function ({
             //TODO: cql_filter: JSON.stringify(params.filter)
         }
         const sortBy =
-            field !== "id" ? `${field}+${order === "ASC" ? "A" : "D"}` : "" //Disable sort by id, not supported by GeoServer, only properties
+            field !== "id"
+                ? `${field.replace("properties.", "")}+${
+                      order === "ASC" ? "A" : "D"
+                  }`
+                : "" //Disable sort by id, not supported by GeoServer, only properties
         const url = `${geoserverBaseURL}/wfs?request=getFeature&typeName=${getTypeName(
             resource
         )}&outputFormat=json&${stringify(
