@@ -59,7 +59,6 @@ export const PoiEdit = (props) => (
 )
 
 export const PoiShow = (props) => {
-    console.log(props)
     const {
         // basePath, // deduced from the location, useful for action buttons
         // defaultTitle, // the translated title based on the resource, e.g. 'Post #123'
@@ -69,7 +68,6 @@ export const PoiShow = (props) => {
         // resource, // the resource name, deduced from the location. e.g. 'posts'
         // version, // integer used by the refresh feature
     } = useShowController(props)
-    console.log(record)
     const lat = record && record.geometry.coordinates[1]
     const lon = record && record.geometry.coordinates[0]
     return (
