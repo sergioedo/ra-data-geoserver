@@ -1,6 +1,7 @@
 import * as React from "react"
 import {
     List,
+    Create,
     Edit,
     Show,
     Datagrid,
@@ -24,6 +25,26 @@ export const PoiList = (props) => (
     </List>
 )
 
+export const PoiCreate = (props) => (
+    <Create {...props}>
+        <SimpleForm>
+            <TextInput source="properties.NAME" label={"Name"} />
+            <TextInput source="properties.THUMBNAIL" label={"Thumbnail"} />
+            <TextInput source="properties.MAINPAGE" label={"Main Page"} />
+            <TextInput
+                source="geometry.coordinates[1]"
+                label={"Latitude"}
+                defaultValue={"41.390205"}
+            />
+            <TextInput
+                source="geometry.coordinates[0]"
+                label={"Longitude"}
+                defaultValue={"2.154007"}
+            />
+        </SimpleForm>
+    </Create>
+)
+
 export const PoiEdit = (props) => (
     <Edit {...props}>
         <SimpleForm>
@@ -38,7 +59,6 @@ export const PoiEdit = (props) => (
 )
 
 export const PoiShow = (props) => {
-    console.log(props)
     const {
         // basePath, // deduced from the location, useful for action buttons
         // defaultTitle, // the translated title based on the resource, e.g. 'Post #123'
@@ -48,7 +68,6 @@ export const PoiShow = (props) => {
         // resource, // the resource name, deduced from the location. e.g. 'posts'
         // version, // integer used by the refresh feature
     } = useShowController(props)
-    console.log(record)
     const lat = record && record.geometry.coordinates[1]
     const lon = record && record.geometry.coordinates[0]
     return (

@@ -2,7 +2,7 @@ import * as React from "react"
 import { Admin, Resource } from "react-admin"
 import geoServerProvider from "ra-data-geoserver"
 // import { ArchSiteList, ArchSiteEdit, ArchSiteShow } from "./archsites"
-import { PoiList, PoiEdit, PoiShow } from "./poi"
+import { PoiList, PoiCreate, PoiEdit, PoiShow } from "./poi"
 import RoomIcon from "@material-ui/icons/Room"
 
 const dataProvider = geoServerProvider({
@@ -23,6 +23,7 @@ const App = () => (
             options={{ label: "Manhattan POIs" }}
             list={PoiList}
             show={PoiShow}
+            create={PoiCreate}
             edit={PoiEdit}
         />
     </Admin>
