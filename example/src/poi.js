@@ -79,7 +79,7 @@ export const PoiEdit = (props) => {
                 />
                 {record && (
                     <MapContainer
-                        style={{ height: "350px" }}
+                        style={{ height: "350px", width: "100%" }}
                         center={[lat, lon]}
                         zoom={16}
                         scrollWheelZoom={true}
@@ -148,7 +148,7 @@ export const PoiShow = (props) => {
                 />
                 {record && (
                     <MapContainer
-                        style={{ height: "350px" }}
+                        style={{ height: "350px", width: "100%" }}
                         center={[lat, lon]}
                         zoom={16}
                         scrollWheelZoom={true}
