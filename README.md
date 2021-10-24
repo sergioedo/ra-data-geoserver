@@ -9,5 +9,5 @@ react-admin data provider for GeoServer. With this datasource, you can connect y
 -   [x] Create Features (points)
 -   [x] Edit Features (points)
 -   [x] Delete Features
--   [ ] Sorting columns
+-   [x] Sorting columns (fid is not supported on GeoServer)
 -   [ ] Complete CRUD for lines & polygons

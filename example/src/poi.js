@@ -12,7 +12,14 @@ import {
     SimpleShowLayout,
     useShowController,
 } from "react-admin"
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
+import {
+    MapContainer,
+    TileLayer,
+    Marker,
+    // Popup,
+    FeatureGroup,
+} from "react-leaflet"
+import { EditControl } from "react-leaflet-draw"
 
 export const PoiList = (props) => (
     <List {...props}>
@@ -45,18 +52,63 @@ export const PoiCreate = (props) => (
     </Create>
 )
 
-export const PoiEdit = (props) => (
-    <Edit {...props}>
-        <SimpleForm>
-            {/* <TextInput source="id" label={'ID'} /> */}
-            <TextInput source="properties.NAME" label={"Name"} />
-            <TextInput source="properties.THUMBNAIL" label={"Thumbnail"} />
-            <TextInput source="properties.MAINPAGE" label={"Main Page"} />
-            <TextInput source="geometry.coordinates[1]" label={"Latitude"} />
-            <TextInput source="geometry.coordinates[0]" label={"Longitude"} />
-        </SimpleForm>
-    </Edit>
-)
+export const PoiEdit = (props) => {
+    const { record } = useShowController(props)
+    const lat = record && record.geometry.coordinates[1]
+    const lon = record && record.geometry.coordinates[0]
+
+    const handleEditedGeometry = ({ layers }) => {
+        const layer = layers.getLayers()[0] // get unique layer
+        console.log(layer.getLatLng())
+    }
+
+    return (
+        <Edit {...props}>
+            <SimpleForm>
+                {/* <TextInput source="id" label={'ID'} /> */}
+                <TextInput source="properties.NAME" label={"Name"} />
+                <TextInput source="properties.THUMBNAIL" label={"Thumbnail"} />
+                <TextInput source="properties.MAINPAGE" label={"Main Page"} />
+                <TextInput
+                    source="geometry.coordinates[1]"
+                    label={"Latitude"}
+                />
+                <TextInput
+                    source="geometry.coordinates[0]"
+                    label={"Longitude"}
+                />
+                {record && (
+                    <MapContainer
+                        style={{ height: "350px" }}
+                        center={[lat, lon]}
+                        zoom={16}
+                        scrollWheelZoom={true}
+                    >
+                        <FeatureGroup>
+                            <EditControl
+                                position="topright"
+                                onEdited={handleEditedGeometry}
+                                draw={{
+                                    circle: false,
+                                    circlemarker: false,
+                                    marker: false,
+                                    polygon: false,
+                                    polyline: false,
+                                    rectangle: false,
+                                }}
+                            />
+                            <Marker position={[lat, lon]} />
+                        </FeatureGroup>
+                        <TileLayer
+                            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                    </MapContainer>
+                )}
+            </SimpleForm>
+        </Edit>
+    )
+}
 
 export const PoiShow = (props) => {
     const {
@@ -106,9 +158,9 @@ export const PoiShow = (props) => {
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
                         <Marker position={[lat, lon]}>
-                            <Popup>
+                            {/* <Popup>
                                 A pretty CSS3 popup. <br /> Easily customizable.
-                            </Popup>
+                            </Popup> */}
                         </Marker>
                     </MapContainer>
                 )}

@@ -4,6 +4,7 @@ import "./index.css"
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 import "leaflet/dist/leaflet.css"
+import "leaflet-draw/dist/leaflet.draw.css"
 
 // //Fix issue with leaflet icons and webpack:
 // https://github.com/PaulLeCam/react-leaflet/issues/453
