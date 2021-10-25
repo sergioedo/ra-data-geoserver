@@ -3,7 +3,10 @@ import { Admin, Resource } from "react-admin"
 import geoServerProvider from "ra-data-geoserver"
 // import { ArchSiteList, ArchSiteEdit, ArchSiteShow } from "./archsites"
 import { PoiList, PoiCreate, PoiEdit, PoiShow } from "./poi"
-import RoomIcon from "@material-ui/icons/Room"
+import { RoadList, RoadCreate, RoadEdit, RoadShow } from "./roads"
+import POIIcon from "@material-ui/icons/Room"
+import LineIcon from "@material-ui/icons/Timeline"
+// import PolygonIcon from "@material-ui/icons/FormatShapes"
 
 const dataProvider = geoServerProvider({
     geoserverBaseURL: "http://localhost:3000/geoserver",
@@ -19,12 +22,21 @@ const App = () => (
     <Admin title="GeoServer Admin" dataProvider={dataProvider}>
         <Resource
             name="poi"
-            icon={RoomIcon}
+            icon={POIIcon}
             options={{ label: "Manhattan POIs" }}
             list={PoiList}
             show={PoiShow}
             create={PoiCreate}
             edit={PoiEdit}
+        />
+        <Resource
+            name="tiger_roads"
+            icon={LineIcon}
+            options={{ label: "Manhattan Roads" }}
+            list={RoadList}
+            show={RoadShow}
+            create={RoadCreate}
+            edit={RoadEdit}
         />
     </Admin>
 )
