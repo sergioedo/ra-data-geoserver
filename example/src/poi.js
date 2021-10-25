@@ -10,17 +10,9 @@ import {
     NumberField,
     TextInput,
     SimpleShowLayout,
-    useShowController,
 } from "react-admin"
-import { useField } from "react-final-form"
-import {
-    MapContainer,
-    TileLayer,
-    Marker,
-    // Popup,
-    FeatureGroup,
-} from "react-leaflet"
-import { EditControl } from "react-leaflet-draw"
+import GeometryInput from "./components/GeometryInput"
+import GeometryField from "./components/GeometryField"
 
 export const PoiList = (props) => (
     <List {...props}>
@@ -53,50 +45,6 @@ export const PoiCreate = (props) => (
     </Create>
 )
 
-const GeometryInput = ({ source = "geometry" }) => {
-    const { input: geometryInput } = useField(source)
-
-    const handleEditedGeometry = ({ layers }) => {
-        const layer = layers.getLayers()[0] // get unique layer
-        geometryInput.onChange({
-            type: "Point",
-            coordinates: [layer.getLatLng().lng, layer.getLatLng().lat],
-        })
-    }
-
-    const lat = geometryInput.value.coordinates[1]
-    const lon = geometryInput.value.coordinates[0]
-
-    return (
-        <MapContainer
-            style={{ height: "350px", width: "100%" }}
-            center={[lat, lon]}
-            zoom={16}
-            scrollWheelZoom={true}
-        >
-            <FeatureGroup>
-                <EditControl
-                    position="topright"
-                    onEdited={handleEditedGeometry}
-                    draw={{
-                        circle: false,
-                        circlemarker: false,
-                        marker: false,
-                        polygon: false,
-                        polyline: false,
-                        rectangle: false,
-                    }}
-                />
-                <Marker position={[lat, lon]} />
-            </FeatureGroup>
-            <TileLayer
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-        </MapContainer>
-    )
-}
-
 export const PoiEdit = (props) => {
     return (
         <Edit {...props}>
@@ -120,17 +68,6 @@ export const PoiEdit = (props) => {
 }
 
 export const PoiShow = (props) => {
-    const {
-        // basePath, // deduced from the location, useful for action buttons
-        // defaultTitle, // the translated title based on the resource, e.g. 'Post #123'
-        // loaded, // boolean that is false until the record is available
-        // loading, // boolean that is true on mount, and false once the record was fetched
-        record, // record fetched via dataProvider.getOne() based on the id from the location
-        // resource, // the resource name, deduced from the location. e.g. 'posts'
-        // version, // integer used by the refresh feature
-    } = useShowController(props)
-    const lat = record && record.geometry.coordinates[1]
-    const lon = record && record.geometry.coordinates[0]
     return (
         <Show {...props}>
             <SimpleShowLayout>
@@ -155,24 +92,7 @@ export const PoiShow = (props) => {
                         maximumFractionDigits: 6,
                     }}
                 />
-                {record && (
-                    <MapContainer
-                        style={{ height: "350px", width: "100%" }}
-                        center={[lat, lon]}
-                        zoom={16}
-                        scrollWheelZoom={true}
-                    >
-                        <TileLayer
-                            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                        <Marker position={[lat, lon]}>
-                            {/* <Popup>
-                                A pretty CSS3 popup. <br /> Easily customizable.
-                            </Popup> */}
-                        </Marker>
-                    </MapContainer>
-                )}
+                <GeometryField source="geometry" />
             </SimpleShowLayout>
         </Show>
     )
