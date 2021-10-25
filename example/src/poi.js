@@ -31,16 +31,9 @@ export const PoiCreate = (props) => (
             <TextInput source="properties.NAME" label={"Name"} />
             <TextInput source="properties.THUMBNAIL" label={"Thumbnail"} />
             <TextInput source="properties.MAINPAGE" label={"Main Page"} />
-            <TextInput
-                source="geometry.coordinates[1]"
-                label={"Latitude"}
-                defaultValue={"41.390205"}
-            />
-            <TextInput
-                source="geometry.coordinates[0]"
-                label={"Longitude"}
-                defaultValue={"2.154007"}
-            />
+            <TextInput source="geometry.coordinates[1]" label={"Latitude"} />
+            <TextInput source="geometry.coordinates[0]" label={"Longitude"} />
+            <GeometryInput source="geometry" />
         </SimpleForm>
     </Create>
 )
