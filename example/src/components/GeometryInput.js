@@ -1,13 +1,20 @@
 import * as React from "react"
 import { useField } from "react-final-form"
-import {
-    MapContainer,
-    TileLayer,
-    Marker,
-    // Popup,
-    FeatureGroup,
-} from "react-leaflet"
+import { MapContainer, TileLayer, FeatureGroup } from "react-leaflet"
 import { EditControl } from "react-leaflet-draw"
+import { getPosition } from "../utils"
+import GeometryLayer from "./GeometryLayer"
+
+const getDrawOptions = (type) => {
+    return {
+        circle: false,
+        circlemarker: false,
+        marker: type.endsWith("Point") ? {} : false,
+        polygon: type.endsWith("Polygon") ? {} : false,
+        polyline: type.endsWith("LineString") ? {} : false,
+        rectangle: false,
+    }
+}
 
 const GeometryInput = ({
     source = "geometry",
@@ -32,17 +39,15 @@ const GeometryInput = ({
         })
     }
 
-    const lat = geometryInput.value
-        ? geometryInput.value.coordinates[1]
-        : defaultCenterLatLon[0]
-    const lon = geometryInput.value
-        ? geometryInput.value.coordinates[0]
-        : defaultCenterLatLon[1]
+    const position = geometryInput.value
+        ? getPosition(geometryInput.value)
+        : defaultCenterLatLon
 
+    console.log(geometryInput.value.type)
     return (
         <MapContainer
             style={{ height: "350px", width: "100%" }}
-            center={[lat, lon]}
+            center={position}
             zoom={defaultZoom}
             scrollWheelZoom={true}
         >
@@ -51,16 +56,9 @@ const GeometryInput = ({
                     position="topright"
                     onCreated={handleCreatedGeometry}
                     onEdited={handleEditedGeometry}
-                    draw={{
-                        circle: false,
-                        circlemarker: false,
-                        marker: {},
-                        polygon: false,
-                        polyline: false,
-                        rectangle: false,
-                    }}
+                    draw={getDrawOptions(geometryInput.value.type)}
                 />
-                {geometryInput.value && <Marker position={[lat, lon]} />}
+                <GeometryLayer geometry={geometryInput.value} />
             </FeatureGroup>
             <TileLayer
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
