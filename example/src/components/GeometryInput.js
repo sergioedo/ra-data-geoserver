@@ -57,6 +57,12 @@ const GeometryInput = ({
                     onCreated={handleCreatedGeometry}
                     onEdited={handleEditedGeometry}
                     draw={getDrawOptions(geometryInput.value.type)}
+                    edit={{
+                        selectedPathOptions: {
+                            maintainColor: true,
+                            opacity: 0.3,
+                        },
+                    }}
                 />
                 <GeometryLayer geometry={geometryInput.value} />
             </FeatureGroup>
