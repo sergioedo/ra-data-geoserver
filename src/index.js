@@ -165,7 +165,6 @@ export default function ({
     }
 
     const featureToWFSTUpdate = ({ resource, id, data }) => {
-        const geometryType = data.geometry.type
         const wfsProperties = Object.keys(data.properties).map((property) => {
             const propertyValue = data.properties[property]
             return `
@@ -176,8 +175,6 @@ export default function ({
             `
         })
         const geometryFieldName = "the_geom" //TODO: get geometry field name from schema
-        const latitude = data.geometry.coordinates[1]
-        const longitude = data.geometry.coordinates[0]
         const wfsGeometry = `
             <wfs:Property>
                 <wfs:Name>${geometryFieldName}</wfs:Name>
@@ -234,15 +231,9 @@ export default function ({
             return `<${geoserverWorkspace}:${property}>${propertyValue}</${geoserverWorkspace}:${property}>`
         })
         const geometryFieldName = "the_geom" //TODO: get geometry field name from schema
-        const latitude = data.geometry.coordinates[1]
-        const longitude = data.geometry.coordinates[0]
-        const wfsPointGeometry = `
+        const wfsGeometry = `
             <feature:${geometryFieldName}>
-                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
-                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">
-                        ${longitude},${latitude}
-                    </gml:coordinates>
-                </gml:Point>
+                ${getGMLGeometry(data.geometry)}
             </feature:${geometryFieldName}>
         `
         const xmlWFST = `
@@ -254,7 +245,7 @@ export default function ({
             <wfs:Insert>
                 <${geoserverWorkspace}:${resource} xmlns:feature="http://www.openplans.org/${resource}">
                 ${wfsProperties.join("")}
-                ${wfsPointGeometry}            
+                ${wfsGeometry}
                 </${geoserverWorkspace}:${resource}>
             </wfs:Insert>
         </wfs:Transaction>`
