@@ -39,30 +39,14 @@ const httpClientWFST = (url, options = {}) => {
  * @param {string} geoserverBaseURL GeoServer Base URL
  * @param {string} geoserverWorkspace GeoServer Workspace, to avoid prefix all layer names (resources)
  * @param {object} extraQueryParams Object with extra query parameters (filters)
- * @param {boolean} flattenProperties Transform GeoJSON to plain JSON object
  */
 export default function ({
     geoserverBaseURL,
     geoserverWorkspace,
     extraQueryParams,
-    flattenProperties,
     geoserverUser,
     geoserverPassword,
 }) {
-    const featureToData = (feature) => {
-        if (flattenProperties) {
-            return {
-                id: feature.id,
-                ...feature.properties,
-                //TODO: geometry, as lat-lon fields (centroid on lines, polygons...)
-                // lon: feature.geometry.coordinates[0],
-                // lat: feature.geometry.coordinates[1]
-            }
-        } else {
-            return feature
-        }
-    }
-
     const getTypeName = (resource) => {
         if (geoserverWorkspace && geoserverWorkspace !== "") {
             return `${geoserverWorkspace}:${resource}`
@@ -93,7 +77,7 @@ export default function ({
         )}&sortBy=${sortBy}&srsName=EPSG:4326`
 
         return httpClient(url).then(({ json }) => ({
-            data: json.features.map((f) => featureToData(f)),
+            data: json.features,
             total: json.totalFeatures,
         }))
     }
@@ -107,7 +91,7 @@ export default function ({
         )}&outputFormat=json&${stringify(query)}&srsName=EPSG:4326`
 
         return httpClient(url).then(({ json }) => ({
-            data: featureToData(json.features[0]),
+            data: json.features[0],
         }))
     }
 
