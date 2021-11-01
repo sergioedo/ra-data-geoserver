@@ -135,7 +135,37 @@ export default function ({
         }))
     }
 
+    const getGMLGeometry = (geometry) => {
+        console.log({ geometry })
+        if (geometry.type === "Point") {
+            return `<gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+                        <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">
+                            ${geometry.coordinates[0]},${geometry.coordinates[1]}
+                        </gml:coordinates>
+                    </gml:Point>`
+        } else if (geometry.type === "MultiLineString") {
+            return `<gml:MultiLineString srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+                    ${geometry.coordinates
+                        .map(
+                            (subGeometry) => `    
+                        <gml:lineStringMember>
+                            <gml:LineString>
+                                <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">
+                                    ${subGeometry
+                                        .map((c) => `${c[0]},${c[1]}`)
+                                        .join(" ")}
+                                </gml:coordinates>
+                            </gml:LineString>
+                        </gml:lineStringMember>
+                        `
+                        )
+                        .join("")}
+                    </gml:MultiLineString>`
+        }
+    }
+
     const featureToWFSTUpdate = ({ resource, id, data }) => {
+        const geometryType = data.geometry.type
         const wfsProperties = Object.keys(data.properties).map((property) => {
             const propertyValue = data.properties[property]
             return `
@@ -148,15 +178,11 @@ export default function ({
         const geometryFieldName = "the_geom" //TODO: get geometry field name from schema
         const latitude = data.geometry.coordinates[1]
         const longitude = data.geometry.coordinates[0]
-        const wfsPointGeometry = `
+        const wfsGeometry = `
             <wfs:Property>
                 <wfs:Name>${geometryFieldName}</wfs:Name>
                 <wfs:Value>
-                    <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
-                        <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">
-                            ${longitude},${latitude}
-                        </gml:coordinates>
-                    </gml:Point>
+                    ${getGMLGeometry(data.geometry)}
                 </wfs:Value>
             </wfs:Property>
         `
@@ -167,7 +193,7 @@ export default function ({
             xmlns:wfs="http://www.opengis.net/wfs">
             <wfs:Update typeName="${geoserverWorkspace}:${resource}">
             ${wfsProperties.join("")}
-            ${wfsPointGeometry}
+            ${wfsGeometry}
             <ogc:Filter>
                 <ogc:FeatureId fid="${id}"/>
             </ogc:Filter>

@@ -33,7 +33,7 @@ export const PoiCreate = (props) => (
             <TextInput source="properties.MAINPAGE" label={"Main Page"} />
             <TextInput source="geometry.coordinates[1]" label={"Latitude"} />
             <TextInput source="geometry.coordinates[0]" label={"Longitude"} />
-            <GeometryInput source="geometry" />
+            <GeometryInput source="geometry" geometryType={"Point"} />
         </SimpleForm>
     </Create>
 )

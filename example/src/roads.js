@@ -28,7 +28,7 @@ export const RoadCreate = (props) => (
         <SimpleForm>
             <TextInput source="properties.NAME" label={"Name"} />
             <TextInput source="properties.CFCC" label={"CFCC"} />
-            <GeometryInput source="geometry" />
+            <GeometryInput source="geometry" geometryType={"MultiLineString"} />
         </SimpleForm>
     </Create>
 )

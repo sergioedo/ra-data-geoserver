@@ -19,7 +19,10 @@ const GeometryField = ({ source = "geometry" }) => {
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <GeometryLayer geometry={record.geometry} />
+            <GeometryLayer
+                geometry={record.geometry}
+                geometryType={record.geometry.type}
+            />
         </MapContainer>
     )
 }
