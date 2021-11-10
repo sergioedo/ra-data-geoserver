@@ -1,12 +1,17 @@
 import * as React from "react"
 import { Admin, Resource } from "react-admin"
 import geoServerProvider from "ra-data-geoserver"
-// import { ArchSiteList, ArchSiteEdit, ArchSiteShow } from "./resources/archsites"
 import { PoiList, PoiCreate, PoiEdit, PoiShow } from "./resources/poi"
 import { RoadList, RoadCreate, RoadEdit, RoadShow } from "./resources/roads"
+import {
+    LandMarkList,
+    LandMarkCreate,
+    LandMarkEdit,
+    LandMarkShow,
+} from "./resources/landmarks"
 import POIIcon from "@material-ui/icons/Room"
 import LineIcon from "@material-ui/icons/Timeline"
-// import PolygonIcon from "@material-ui/icons/FormatShapes"
+import PolygonIcon from "@material-ui/icons/FormatShapes"
 
 const dataProvider = geoServerProvider({
     geoserverBaseURL: "http://localhost:3000/geoserver",
@@ -36,6 +41,15 @@ const App = () => (
             show={RoadShow}
             create={RoadCreate}
             edit={RoadEdit}
+        />
+        <Resource
+            name="poly_landmarks"
+            icon={PolygonIcon}
+            options={{ label: "Manhattan LandMarks" }}
+            list={LandMarkList}
+            show={LandMarkShow}
+            create={LandMarkCreate}
+            edit={LandMarkEdit}
         />
     </Admin>
 )
