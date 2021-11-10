@@ -1,9 +1,9 @@
 import * as React from "react"
 import { Admin, Resource } from "react-admin"
 import geoServerProvider from "ra-data-geoserver"
-// import { ArchSiteList, ArchSiteEdit, ArchSiteShow } from "./archsites"
-import { PoiList, PoiCreate, PoiEdit, PoiShow } from "./poi"
-import { RoadList, RoadCreate, RoadEdit, RoadShow } from "./roads"
+// import { ArchSiteList, ArchSiteEdit, ArchSiteShow } from "./resources/archsites"
+import { PoiList, PoiCreate, PoiEdit, PoiShow } from "./resources/poi"
+import { RoadList, RoadCreate, RoadEdit, RoadShow } from "./resources/roads"
 import POIIcon from "@material-ui/icons/Room"
 import LineIcon from "@material-ui/icons/Timeline"
 // import PolygonIcon from "@material-ui/icons/FormatShapes"
@@ -14,7 +14,6 @@ const dataProvider = geoServerProvider({
     // extraQueryParams: {
     //     cql_filter: "cat<=15",
     // },
-    // flattenProperties: false,
     geoserverUser: process.env.REACT_APP_GEOSERVER_USER,
     geoserverPassword: process.env.REACT_APP_GEOSERVER_PASSWORD,
 })

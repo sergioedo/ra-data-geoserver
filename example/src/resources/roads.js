@@ -10,8 +10,8 @@ import {
     TextInput,
     SimpleShowLayout,
 } from "react-admin"
-import GeometryInput from "./components/GeometryInput"
-import GeometryField from "./components/GeometryField"
+import GeometryInput from "../components/GeometryInput"
+import GeometryField from "../components/GeometryField"
 
 export const RoadList = (props) => (
     <List {...props}>
