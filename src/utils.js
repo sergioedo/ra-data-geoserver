@@ -24,6 +24,29 @@ const getGMLGeometry = (geometry) => {
                     )
                     .join("")}
                 </gml:MultiLineString>`
+    } else if (geometry.type === "MultiPolygon") {
+        geometry.coordinates.map((subGeometry) => console.log({ subGeometry }))
+        return `<gml:MultiPolygon srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+                ${geometry.coordinates
+                    .map(
+                        (subGeometry) => `
+                    <gml:polygonMember>
+                        <gml:Polygon>
+                            <gml:outerBoundaryIs>
+                                <gml:LinearRing>
+                                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">
+                                        ${subGeometry[0] // outer ring
+                                            .map((c) => `${c[0]},${c[1]}`)
+                                            .join(" ")}
+                                    </gml:coordinates>
+                                </gml:LinearRing>
+                            </gml:outerBoundaryIs>
+                        </gml:Polygon>
+                    </gml:polygonMember>
+                    `
+                    )
+                    .join("")}
+                </gml:MultiPolygon>`
     }
 }
 

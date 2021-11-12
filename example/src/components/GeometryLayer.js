@@ -1,4 +1,4 @@
-import { Marker, Polyline } from "react-leaflet"
+import { Marker, Polyline, Polygon } from "react-leaflet"
 import { getPosition, reverseCoordinates } from "../utils"
 
 const GeometryLayer = ({ geometry, geometryType }) => {
@@ -9,6 +9,9 @@ const GeometryLayer = ({ geometry, geometryType }) => {
     } else if (geometryType.endsWith("LineString")) {
         const g = geometry ? reverseCoordinates(geometry.coordinates) : []
         return <Polyline positions={g} />
+    } else if (geometryType.endsWith("Polygon")) {
+        const g = geometry ? reverseCoordinates(geometry.coordinates) : []
+        return <Polygon positions={g} />
     }
 }
 

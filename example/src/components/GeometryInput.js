@@ -36,6 +36,18 @@ const normalizeMultiGeometry = ({ geometry, geometryType }) => {
     return geometry
 }
 
+const reduceToSimpleGeometry = (geometry) => {
+    const isMultiGeometry = geometry.type.startsWith("Multi")
+    if (isMultiGeometry) {
+        // Convert multigeometry to simple geometry (reduce to first geometry)
+        return {
+            type: geometry.type.substring(5),
+            coordinates: geometry.coordinates[0],
+        }
+    }
+    return geometry
+}
+
 const GeometryInput = ({
     source = "geometry",
     geometryType = "Point",
@@ -92,7 +104,7 @@ const GeometryInput = ({
                     }}
                 />
                 <GeometryLayer
-                    geometry={geometryInput.value}
+                    geometry={reduceToSimpleGeometry(geometryInput.value)}
                     geometryType={geomType}
                 />
             </FeatureGroup>
