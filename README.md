@@ -1,6 +1,6 @@
 # ra-data-geoserver
 
-A data provider for [react-admin](https://github.com/marmelab/react-admin) for building admin applications with geospatial data on top of GeoServer (through WFS services).
+A data provider for [react-admin](https://github.com/marmelab/react-admin) for building admin applications with geospatial data on top of [GeoServer](http://geoserver.org/) (through WFS services).
 
 ![](architecture.png)
 
