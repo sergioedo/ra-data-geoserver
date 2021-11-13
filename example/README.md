@@ -8,6 +8,21 @@ To run it locally, you need a GeoServer backend. You can launch it with docker:
 docker run -d -p 8080:8080 oscarfonts/geoserver
 ```
 
+You must configure environment variables. Copy '.env.example' to '.env.local' and adjust if necessary ('.env.example' is ready to connect to previous local geoserver with docker)
+
+```
+cp .env.example .env.local
+```
+
+To avoid CORS problems between ReactAdmin app (port 3000) and Geoserver (port 8080), [CRA proxy](https://create-react-app.dev/docs/proxying-api-requests-in-development/) is configured in [package.json](package.json), to redirect API calls to GeoServer:
+
+```
+// package.json
+...
+"proxy": "http://localhost:8080",
+...
+```
+
 Then you can launch the app with:
 
 ```
