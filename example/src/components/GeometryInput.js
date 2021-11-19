@@ -37,7 +37,8 @@ const normalizeMultiGeometry = ({ geometry, geometryType }) => {
 }
 
 const reduceToSimpleGeometry = (geometry) => {
-    const isMultiGeometry = geometry.type.startsWith("Multi")
+    const isMultiGeometry =
+        geometry && geometry.type && geometry.type.startsWith("Multi")
     if (isMultiGeometry) {
         // Convert multigeometry to simple geometry (reduce to first geometry)
         return {
