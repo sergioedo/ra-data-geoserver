@@ -19,7 +19,7 @@
     "bugs": "https://github.com/sergioedo/ra-data-geoserver/issues",
     "license": "MIT",
     "dependencies": {
-        "query-string": "5.1.1",
-        "react-admin": "3.10.3"
+        "query-string": "7.0.1",
+        "react-admin": "3.19.0"
     }
 }

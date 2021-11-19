@@ -1,11 +1,13 @@
 import * as React from "react"
-import { useRecordContext } from "react-admin"
+import { useRecordContext } from "ra-core"
 import { MapContainer, TileLayer } from "react-leaflet"
 import GeometryLayer from "./GeometryLayer"
 import { getPosition } from "../utils"
 
-const GeometryField = ({ source = "geometry" }) => {
-    const { record } = useRecordContext()
+const GeometryField = (props) => {
+    const { source = "geometry" } = props
+    const record = useRecordContext(props)
+    console.log({ record })
     const position = getPosition(record.geometry)
 
     return (
@@ -20,8 +22,8 @@ const GeometryField = ({ source = "geometry" }) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <GeometryLayer
-                geometry={record.geometry}
-                geometryType={record.geometry.type}
+                geometry={record[source]}
+                geometryType={record[source].type}
             />
         </MapContainer>
     )
