@@ -33,5 +33,6 @@ In this sample you can test 3 different features, with Point, MultiLineString an
 
 # Known limitations/issues
 
--   Editor component (react-leaflet-draw) is buggy (editing line/polygon vertexs don't render correctly). Workaround is cancel the edit (first time) and start again.
--   On edit, MultiGeometries are reduced to a single geometry (the first one).
+- Editor component (react-leaflet-draw) is buggy (editing line/polygon vertexs don't render correctly). Workaround is cancel the edit (first time) and start again.
+- On edit, MultiGeometries are reduced to a single geometry (the first one).
+- Working with GeoServer sample data (shapefiles), has limitations (on insert no id returned, and don't support concurrency, for example on multiple delete only delete 1 element)
