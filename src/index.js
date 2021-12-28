@@ -66,9 +66,8 @@ export default function ({
         }
         const sortBy =
             field !== "id"
-                ? `${field.replace("properties.", "")}+${
-                      order === "ASC" ? "A" : "D"
-                  }`
+                ? `${field.replace("properties.", "")}+${order === "ASC" ? "A" : "D"
+                }`
                 : "" //Disable sort by id, not supported by GeoServer, only properties
         const url = `${geoserverBaseURL}/wfs?request=getFeature&typeName=${getTypeName(
             resource
@@ -184,19 +183,18 @@ export default function ({
             geoserverUser,
             geoserverPassword,
         }).then(({ xmlText }) => {
-            return { data: params.previousData }
+            return { data: { id: params.id } }
         })
     }
 
-    // TODO: pending implementation
     const deleteMany = (resource, params) => {
-        const query = {
-            filter: JSON.stringify({ id: params.ids }),
-        }
-        return httpClient(`${apiUrl}/${resource}?${stringify(query)}`, {
-            method: "DELETE",
-            body: JSON.stringify(params.data),
-        }).then(({ json }) => ({ data: json }))
+        return Promise.all(
+            params.ids.map((id) =>
+                del(resource, { id, previousData: params.data })
+            )
+        ).then((responses) => ({
+            data: responses.map((data) => data.id),
+        }))
     }
 
     return {
