@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useField } from "react-final-form"
+import { useController } from "react-hook-form"
 import { MapContainer, TileLayer, FeatureGroup } from "react-leaflet"
 import { EditControl } from "react-leaflet-draw"
 import { getPosition } from "../utils"
@@ -55,7 +55,7 @@ const GeometryInput = ({
     defaultCenterLatLon = [41.390205, 2.154007],
     defaultZoom = 16,
 }) => {
-    const { input: geometryInput } = useField(source)
+    const { input: geometryInput } = useController(source)
 
     const geomType = geometryInput.value
         ? geometryInput.value.type
