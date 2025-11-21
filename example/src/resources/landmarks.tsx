@@ -24,29 +24,29 @@ export const LandMarkList = (props) => (
     </List>
 )
 
-// export const LandMarkCreate = (props) => (
-//     <Create {...props}>
-//         <SimpleForm>
-//             <TextInput source="properties.LAND" label={"Code"} />
-//             <TextInput source="properties.CFCC" label={"CFCC"} />
-//             <TextInput source="properties.LANAME" label={"Name"} />
-//             <GeometryInput source="geometry" geometryType={"MultiPolygon"} />
-//         </SimpleForm>
-//     </Create>
-// )
+export const LandMarkCreate = (props) => (
+    <Create {...props}>
+        <SimpleForm>
+            <TextInput source="properties.LAND" label={"Code"} />
+            <TextInput source="properties.CFCC" label={"CFCC"} />
+            <TextInput source="properties.LANAME" label={"Name"} />
+            <GeometryInput source="geometry" geometryType={"MultiPolygon"} />
+        </SimpleForm>
+    </Create>
+)
 
-// export const LandMarkEdit = (props) => {
-//     return (
-//         <Edit {...props}>
-//             <SimpleForm>
-//                 <TextInput source="properties.LAND" label={"Code"} />
-//                 <TextInput source="properties.CFCC" label={"CFCC"} />
-//                 <TextInput source="properties.LANAME" label={"Name"} />
-//                 <GeometryInput source="geometry" />
-//             </SimpleForm>
-//         </Edit>
-//     )
-// }
+export const LandMarkEdit = (props) => {
+    return (
+        <Edit {...props}>
+            <SimpleForm>
+                <TextInput source="properties.LAND" label={"Code"} />
+                <TextInput source="properties.CFCC" label={"CFCC"} />
+                <TextInput source="properties.LANAME" label={"Name"} />
+                <GeometryInput source="geometry" />
+            </SimpleForm>
+        </Edit>
+    )
+}
 
 export const LandMarkShow = (props) => {
     return (

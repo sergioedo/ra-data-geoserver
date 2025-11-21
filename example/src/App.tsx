@@ -2,12 +2,12 @@ import { Admin, Resource, ShowGuesser } from "react-admin";
 // import { dataProvider } from './dataProvider';
 import geoServerProvider from "ra-data-geoserver";
 // import { PostList, PostEdit, PostCreate } from "./posts";
-import { PoiList/*, PoiCreate*/, PoiEdit, PoiShow } from "./resources/poi"
-import { RoadList/*, RoadCreate, RoadEdit*/, RoadShow } from "./resources/roads"
+import { PoiList, PoiCreate, PoiEdit, PoiShow } from "./resources/poi"
+import { RoadList, RoadCreate, RoadEdit, RoadShow } from "./resources/roads"
 import {
     LandMarkList,
-    // LandMarkCreate,
-    // LandMarkEdit,
+    LandMarkCreate,
+    LandMarkEdit,
     LandMarkShow
 } from "./resources/landmarks"
 // import { UserList } from "./users";
@@ -38,7 +38,7 @@ export const App = () => (
             options={{ label: "Manhattan POIs" }}
             list={PoiList}
             show={PoiShow}
-            // create={PoiCreate}
+            create={PoiCreate}
             edit={PoiEdit}
         />
         <Resource
@@ -47,8 +47,8 @@ export const App = () => (
             options={{ label: "Manhattan Roads" }}
             list={RoadList}
             show={RoadShow}
-        // create={RoadCreate}
-        // edit={RoadEdit}
+            create={RoadCreate}
+            edit={RoadEdit}
         />
         <Resource
             name="poly_landmarks"
@@ -56,8 +56,8 @@ export const App = () => (
             options={{ label: "Manhattan LandMarks" }}
             list={LandMarkList}
             show={LandMarkShow}
-        // create={LandMarkCreate}
-        // edit={LandMarkEdit}
+            create={LandMarkCreate}
+            edit={LandMarkEdit}
         />
     </Admin>
 );

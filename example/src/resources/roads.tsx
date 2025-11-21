@@ -23,27 +23,27 @@ export const RoadList = (props) => (
     </List>
 )
 
-// export const RoadCreate = (props) => (
-//     <Create {...props}>
-//         <SimpleForm>
-//             <TextInput source="properties.NAME" label={"Name"} />
-//             <TextInput source="properties.CFCC" label={"CFCC"} />
-//             <GeometryInput source="geometry" geometryType={"MultiLineString"} />
-//         </SimpleForm>
-//     </Create>
-// )
+export const RoadCreate = (props) => (
+    <Create {...props}>
+        <SimpleForm>
+            <TextInput source="properties.NAME" label={"Name"} />
+            <TextInput source="properties.CFCC" label={"CFCC"} />
+            <GeometryInput source="geometry" geometryType={"MultiLineString"} />
+        </SimpleForm>
+    </Create>
+)
 
-// export const RoadEdit = (props) => {
-//     return (
-//         <Edit {...props}>
-//             <SimpleForm>
-//                 <TextInput source="properties.NAME" label={"Name"} />
-//                 <TextInput source="properties.CFCC" label={"CFCC"} />
-//                 <GeometryInput source="geometry" />
-//             </SimpleForm>
-//         </Edit>
-//     )
-// }
+export const RoadEdit = (props) => {
+    return (
+        <Edit {...props}>
+            <SimpleForm>
+                <TextInput source="properties.NAME" label={"Name"} />
+                <TextInput source="properties.CFCC" label={"CFCC"} />
+                <GeometryInput source="geometry" />
+            </SimpleForm>
+        </Edit>
+    )
+}
 
 export const RoadShow = (props) => {
     return (

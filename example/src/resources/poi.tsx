@@ -25,18 +25,16 @@ export const PoiList = (props) => (
     </List>
 )
 
-// export const PoiCreate = (props) => (
-//     <Create {...props}>
-//         <SimpleForm>
-//             <TextInput source="properties.NAME" label={"Name"} />
-//             <TextInput source="properties.THUMBNAIL" label={"Thumbnail"} />
-//             <TextInput source="properties.MAINPAGE" label={"Main Page"} />
-//             <TextInput source="geometry.coordinates[1]" label={"Latitude"} />
-//             <TextInput source="geometry.coordinates[0]" label={"Longitude"} />
-//             <GeometryInput source="geometry" geometryType={"Point"} />
-//         </SimpleForm>
-//     </Create>
-// )
+export const PoiCreate = (props) => (
+    <Create {...props}>
+        <SimpleForm>
+            <TextInput source="properties.NAME" label={"Name"} />
+            <TextInput source="properties.THUMBNAIL" label={"Thumbnail"} />
+            <TextInput source="properties.MAINPAGE" label={"Main Page"} />
+            <GeometryInput source="geometry" geometryType={"Point"} />
+        </SimpleForm>
+    </Create>
+)
 
 export const PoiEdit = (props) => {
     return (
