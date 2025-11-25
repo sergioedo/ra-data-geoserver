@@ -1,29 +1,37 @@
-import * as React from "react"
-import { Admin, Resource } from "react-admin"
-import geoServerProvider from "ra-data-geoserver"
+import { Admin, Resource, ShowGuesser } from "react-admin";
+// import { dataProvider } from './dataProvider';
+import geoServerProvider from "ra-data-geoserver";
+// import { PostList, PostEdit, PostCreate } from "./posts";
 import { PoiList, PoiCreate, PoiEdit, PoiShow } from "./resources/poi"
 import { RoadList, RoadCreate, RoadEdit, RoadShow } from "./resources/roads"
 import {
     LandMarkList,
     LandMarkCreate,
     LandMarkEdit,
-    LandMarkShow,
+    LandMarkShow
 } from "./resources/landmarks"
+// import { UserList } from "./users";
+import { Dashboard } from './Dashboard';
+import { authProvider } from './authProvider';
+
 import POIIcon from "@material-ui/icons/Room"
 import LineIcon from "@material-ui/icons/Timeline"
 import PolygonIcon from "@material-ui/icons/FormatShapes"
+import PostIcon from "@mui/icons-material/Book";
+import UserIcon from "@mui/icons-material/Group";
 
 const dataProvider = geoServerProvider({
-    geoserverBaseURL: "http://localhost:3000/geoserver",
+    geoserverBaseURL: "http://localhost:5173/geoserver",
     geoserverWorkspace: "tiger",
     // extraQueryParams: {
     //     cql_filter: "cat<=15",
     // },
-    geoserverUser: process.env.REACT_APP_GEOSERVER_USER,
-    geoserverPassword: process.env.REACT_APP_GEOSERVER_PASSWORD,
+    geoserverUser: import.meta.env.VITE_GEOSERVER_USER,
+    geoserverPassword: import.meta.env.VITE_GEOSERVER_PASSWORD,
 })
-const App = () => (
-    <Admin title="GeoServer Admin" dataProvider={dataProvider}>
+
+export const App = () => (
+    <Admin authProvider={authProvider} dataProvider={dataProvider} dashboard={Dashboard} >
         <Resource
             name="poi"
             icon={POIIcon}
@@ -52,6 +60,4 @@ const App = () => (
             edit={LandMarkEdit}
         />
     </Admin>
-)
-
-export default App
+);

@@ -1,38 +1,32 @@
-This is a sample react-admin app using GeoServer data provider.
+# test-admin
 
-# Run
+## Installation
 
-To run it locally, you need a GeoServer backend. You can launch it with docker:
+Install the application dependencies by running:
 
-```
-docker run -d -p 8080:8080 oscarfonts/geoserver
-```
-
-You must configure environment variables. Copy '.env.example' to '.env.local' and adjust if necessary ('.env.example' is ready to connect to previous local geoserver with docker)
-
-```
-cp .env.example .env.local
+```sh
+yarn
 ```
 
-To avoid CORS problems between ReactAdmin app (port 3000) and Geoserver (port 8080), [CRA proxy](https://create-react-app.dev/docs/proxying-api-requests-in-development/) is configured in [package.json](package.json), to redirect API calls to GeoServer:
+## Development
 
-```
-// package.json
-...
-"proxy": "http://localhost:8080",
-...
-```
+Start the application in development mode by running:
 
-Then you can launch the app with:
-
-```
-npm start
+```sh
+yarn dev
 ```
 
-In this sample you can test 3 different features, with Point, MultiLineString and MultiPolygon geometries.
+## Production
 
-# Known limitations/issues
+Build the application in production mode by running:
 
-- Editor component (react-leaflet-draw) is buggy (editing line/polygon vertexs don't render correctly). Workaround is cancel the edit (first time) and start again.
-- On edit, MultiGeometries are reduced to a single geometry (the first one).
-- Working with GeoServer sample data (shapefiles), has limitations (on insert no id returned, and don't support concurrency, for example on multiple delete only delete 1 element)
+```sh
+yarn build
+```
+
+## DataProvider
+
+The included data provider use [ra-data-json-server](https://github.com/marmelab/react-admin/tree/master/packages/ra-data-json-server). It fits REST APIs powered by [JSON Server](https://github.com/typicode/json-server), such as [JSONPlaceholder](https://jsonplaceholder.typicode.com/).
+
+You'll find an `.env` file at the project root that includes a `VITE_JSON_SERVER_URL` variable. Set it to the URL of your backend. By default, we set it to targets [JSONPlaceholder](https://jsonplaceholder.typicode.com/).
+
