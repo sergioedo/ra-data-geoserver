@@ -117,16 +117,18 @@ export const featureToWFSTUpdate = ({
     return xmlWFST
 }
 
-export const featureToWFSTDelete = ({ geoserverWorkspace, resource, id }) => {
+export const featureToWFSTDelete = ({ geoserverWorkspace, resource, ids }) => {
+    const featureIds = ids.map(id => `<ogc:FeatureId fid="${id}"/>`).join("");
+
     const xmlWFST = `
-        <wfs:Transaction service="WFS" version="1.0.0"
-            xmlns:ogc="http://www.opengis.net/ogc"
-            xmlns:wfs="http://www.opengis.net/wfs">
-            <wfs:Delete typeName="${geoserverWorkspace}:${resource}">
-                <ogc:Filter>
-                    <ogc:FeatureId fid="${id}"/>
-                </ogc:Filter>
-            </wfs:Delete>
-        </wfs:Transaction>`
+    <wfs:Transaction service="WFS" version="1.0.0"
+        xmlns:ogc="http://www.opengis.net/ogc"
+        xmlns:wfs="http://www.opengis.net/wfs">
+        <wfs:Delete typeName="${geoserverWorkspace}:${resource}">
+            <ogc:Filter>
+                ${featureIds}
+            </ogc:Filter>
+        </wfs:Delete>
+    </wfs:Transaction>`
     return xmlWFST
 }
