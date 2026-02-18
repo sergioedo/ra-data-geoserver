@@ -171,14 +171,14 @@ export default function ({
         })
     }
 
-    const del = (resource, params) => {
+    const del = (resource, { id }) => {
         const url = `${geoserverBaseURL}/wfs`
         return httpClientWFST(url, {
             method: "POST",
             body: featureToWFSTDelete({
                 geoserverWorkspace,
                 resource,
-                id: params.id,
+                ids: [id],
             }),
             geoserverUser,
             geoserverPassword,
@@ -186,15 +186,21 @@ export default function ({
             return { data: { id: params.id } }
         })
     }
-
-    const deleteMany = (resource, params) => {
-        return Promise.all(
-            params.ids.map((id) =>
-                del(resource, { id, previousData: params.data })
-            )
-        ).then((responses) => ({
-            data: responses.map((data) => data.id),
-        }))
+        
+    const deleteMany = (resource, { ids }) => {
+        const url = `${geoserverBaseURL}/wfs`
+        return httpClientWFST(url, {
+            method: "POST",
+            body: featureToWFSTDelete({
+                geoserverWorkspace,
+                resource,
+                ids,
+            }),
+            geoserverUser,
+            geoserverPassword,
+        }).then(({ xmlText }) => {
+            return { data: ids }
+        })
     }
 
     return {
